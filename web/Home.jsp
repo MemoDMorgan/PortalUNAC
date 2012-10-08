@@ -57,9 +57,8 @@
         <%            }
         %>
         <div id='content' style='text-align:center'>
-            <h1>Validación del Login </h1>
-            <p class='mensajeT2'>Hola <%=nombre%>, has ingresado exitosamente !</p><br>
-            <a href='/ProyectoEjemploPortalUNACV6'>Volver</a>
+            <h1>Bienvenido al PORTAL UNAC </h1>
+            <p class='mensajeT2'>Hola <%=nombre%>, has ingresado exitosamente !</p><br>            
         </div>
     </body>
 </html>

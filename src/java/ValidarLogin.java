@@ -46,6 +46,7 @@ public class ValidarLogin extends HttpServlet {
             String urlDB = "jdbc:mysql://localhost/test";
             String userBD = "usuarioPrueba";
             String passBD = "123456";
+            String mensaje="";
 
             //Objetos para manipular la conexion y los datos
             Connection con = null;//Objeto para la conexion
@@ -86,12 +87,16 @@ public class ValidarLogin extends HttpServlet {
 
                 vista.forward(request, response);
             } catch (ClassNotFoundException ex) {
-                System.out.println("No se ha podido cargar el Driver de ORACLE");
+                 mensaje="No se ha podido cargar el Driver de MySQL";
+                System.out.println(mensaje);
                 //request.getRequestDispatcher("/Error.jsp").include(request, response);
                 //request.getRequestDispatcher("/Error.jsp").forward(request, response);
                 response.sendRedirect("Error.jsp");
             } catch (SQLException ex) {
-                System.out.println("No se ha podido establecer la conexión, o el SQL esta mal formado " + sql);
+                mensaje="No se ha podido establecer la conexión, o el SQL esta mal formado " + sql;
+                mensaje=mensaje+"\n"+ex.toString();
+                System.out.println(mensaje);
+                request.setAttribute("mensaje", mensaje);                    
                 request.getRequestDispatcher("/Error.jsp").forward(request, response);
             } finally {
                 try {
