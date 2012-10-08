@@ -1,0 +1,178 @@
+/* 
+    Document   : styles
+    Created on : 26-ago-2012, 11:27:58
+    Author     : Guillermo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#header{
+    width: 100%;
+    height: 30%;
+    border: solid 1px black;            
+    background-color: white;
+    -moz-border-radius: 10px; /*Propiedad de soporte*/  
+    -webkit-border-radius: 10px; /*Propiedad de soporte*/  
+    border-radius: 10px; /*Propiedad válida*/     
+    margin-top: 5px;
+}
+
+#banner{            
+    width: 60%;       
+}
+
+#login{
+    width: 40%;    
+    float: right;
+    margin-top: 11px;
+}
+
+#correo{
+    width: 40%;        
+}
+
+#pass{
+    width: 60%;    
+    float: right;    
+}
+
+#Main-texto{
+    text-align: justify;
+    width: 65%; 
+}
+
+body{
+    /*background-color: #dbf5f9;*/
+}
+
+#content{    
+    background-color: #dbf5f9;
+    /*border: solid 1px black;           */
+    border-top-style: outset;    
+}
+
+h3{    
+    color: #3C8476;    
+}
+
+h2{
+    text-align: center;    
+    color: #ECD72E;
+}
+
+#Main-formulario{
+    float: right;
+    width: 35%;     
+    margin-left: 20px;
+    margin-top: 5px;    
+    background-color: #3C8476;  
+    border: outset 1px black;    
+    padding-bottom: 10px;
+    -moz-border-radius: 10px; /*Propiedad de soporte*/  
+    -webkit-border-radius: 10px; /*Propiedad de soporte*/  
+    border-radius: 10px; /*Propiedad válida*/ 
+}
+
+.campo{    
+    margin-bottom: 10px;
+}
+
+.etiqueta{
+    width: 100px;
+    display: block;
+    float:left;
+    color: white;    
+    margin-left: 10px;
+    font-family: serif;
+    font-weight: bold;
+}
+
+.campo2{    
+    margin-bottom: 10px;
+    height: 40px;        
+}
+
+.campo2 input{    
+    position: relative;
+    top:8px;
+
+}
+
+#btnReg{
+    text-align: center;        
+}
+
+.campo input,.campo2 input{
+    width: 200px;
+}
+
+.campo select{
+    width: 205px;
+}
+
+.boton, .boton:visited{      
+    background-color: #ECD72E;    
+    color: #000;
+    position: relative;
+    cursor:pointer;      
+    font-weight: bold;        
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+}
+
+.boton:hover { /* el efecto hover */
+    background-color: #000; 
+    color: #FFF;
+}
+
+.boton:active{ /* el efecto click */
+    top: 1px;
+}
+
+a:link {
+
+    color: black;
+    font-weight: bold;        
+    font-size: 12px;   
+
+}
+a:visited {
+    color: red;
+}
+a:hover {
+    color: #ECD72E;
+}
+
+.active {    
+    border-color: #000000;
+    color: black;
+    background-color: #f8f8d1;
+}
+
+#capaError{    
+    margin-top: 10px; 
+    color: red;    
+    margin-left: 20px;
+    display: none;
+}
+
+#dialog{    
+    background-color: #f8f8d1;
+    width: 500px;
+}
+
+#ok{
+    color: red;        
+    font-family: monospace;
+}
+
+.mensajeT1{
+    color: red;        
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.mensajeT2{
+    color: #009999;        
+    font-family: monospace;
+    font-weight: bold;
+}
