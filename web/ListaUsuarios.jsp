@@ -11,6 +11,14 @@
 //Obtener el arreglo de estudiantes enviado en la solicitud
     ArrayList<Usuario> usuarios = (ArrayList<Usuario>) request.getAttribute("usuarios");
     int contador = 0;
+
+    //mensaje de datos eliminados
+    /*
+     * equivalente a if(request.getAttribute("mensaje")==null) mensaje=""; else
+     * mensaje=request.getAttribute("mensaje");
+     */
+    String mensaje = request.getAttribute("mensaje") == null ? "" : (String) request.getAttribute("mensaje");
+    String estado = "";
 %>
 <!DOCTYPE html>
 <html>
@@ -105,7 +113,13 @@
                         <%= u.getIdPerfil()%>
                     </td>
                     <td>
-                        <%= u.getEstado()%>
+                        <%
+                            if (u.getEstado() == 0) 
+                                estado = "Activo";
+                             else
+                                estado = "Inactivo";
+                        %>
+                        <%=estado%>
                     </td>
                     <td>
                         <a href="ControladorUsuarios?accion=eliminar&ID=<%=u.getEmail()%>">Eliminar</a>
@@ -122,6 +136,10 @@
 
         </table>
         <br>
+        <p style="text-align:center;color: red">
+            <%=mensaje%>
+        </p>
+
         <hr>
     <center>
         <!--<b><a href="/ProyectoEjemploPortalUNACV6/Home.jsp">Volver a la Página Inicial</a></b>!-->

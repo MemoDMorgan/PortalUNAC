@@ -73,6 +73,20 @@ h2{
     border-radius: 10px; /*Propiedad válida*/ 
 }
 
+#Main-formulario2{
+    position: relative;
+    left: 30%;
+    width: 35%;     
+    margin-left: 20px;
+    margin-top: 5px;    
+    background-color: #3C8476;  
+    border: outset 1px black;    
+    padding-bottom: 10px;
+    -moz-border-radius: 10px; /*Propiedad de soporte*/  
+    -webkit-border-radius: 10px; /*Propiedad de soporte*/  
+    border-radius: 10px; /*Propiedad válida*/     
+}
+
 .campo{    
     margin-bottom: 10px;
 }
@@ -82,6 +96,16 @@ h2{
     display: block;
     float:left;
     color: white;    
+    margin-left: 10px;
+    font-family: serif;
+    font-weight: bold;
+}
+
+.etiquetaNew{
+    width: 100px;
+    display: block;
+    float:left;
+    /*color: white;*/    
     margin-left: 10px;
     font-family: serif;
     font-weight: bold;

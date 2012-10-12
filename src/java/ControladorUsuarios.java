@@ -50,7 +50,7 @@ public class ControladorUsuarios extends HttpServlet {
             eliminar(request, response);
         } else if (accion.equals("editar")) {
             //Solicita pagina para editar
-            editar(request, response);
+            buscar_for_editar(request, response);
         } else if (accion.equals("modificar")) {
             //modificar los datos de un usuario
             modificar(request, response);
@@ -201,7 +201,7 @@ public class ControladorUsuarios extends HttpServlet {
             {
                 Usuario e = new Usuario(resultado.getString(1), resultado.getString(2),
                         resultado.getString(4), resultado.getString(5), resultado.getString(6), resultado.getString(7),
-                        resultado.getInt(8),resultado.getInt(3));
+                        resultado.getInt(8), resultado.getInt(3));
                 //Agregamos el estudiante al arrelo
                 Usuarios.add(e);
             }
@@ -222,16 +222,179 @@ public class ControladorUsuarios extends HttpServlet {
         }
     }
 
-    private void eliminar(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void eliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //Datos de la conexion
+        String driver = "com.mysql.jdbc.Driver";
+        String urlDB = "jdbc:mysql://localhost/test";
+        String userBD = "usuarioPrueba";//userPrueba
+        String passBD = "123456";
+
+        //Objetos para manipular la conexion y los datos
+        Connection con = null;//Objeto para la conexion
+        Statement sentencia = null;//Objeto para definir y ejecutar las consultas sql
+        int resultado = 0;//resultado de las filas borradas sql
+        String sql = "";
+        try {
+            //CARGAR DRIVER
+            Class.forName(driver);
+
+            //ESTABLECER CONEXION
+            con = DriverManager.getConnection(urlDB, userBD, passBD);
+            System.out.println("Conectado ...");
+
+            //OBTENER EL DATO A ELIMINAR
+            String emailUsuario = request.getParameter("ID");
+
+            //Definición de Sentencia SQL
+            sql = "DELETE FROM USUARIOS WHERE semail='" + emailUsuario + "'";
+
+            //Ejecutar sentencia
+            sentencia = con.createStatement();
+            resultado = sentencia.executeUpdate(sql);
+            System.out.println("Borrado exitoso !");
+            request.setAttribute("mensaje", "Registro borrado exitosamente !");
+            //cerrar la conexion
+            con.close();
+
+            //listar de nuevo los datos
+            todos(request, response);
+
+        } catch (ClassNotFoundException ex) {
+            System.out.println("No se ha podido cargar el Driver de MySql");
+            //request.getRequestDispatcher("/Error.jsp").forward(request, response);
+            response.sendRedirect("Error.jsp");
+        } catch (SQLException ex) {
+            System.out.println("No se ha podido establecer la conexión, o el SQL esta mal formado " + sql);
+            request.getRequestDispatcher("/Error.jsp").forward(request, response);
+        }
+    }
+    
+    /*
+     * Método que busca la información de un usuario que será editada.
+     */
+
+    private void buscar_for_editar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //Datos de la conexion
+        String driver = "com.mysql.jdbc.Driver";
+        String urlDB = "jdbc:mysql://localhost/test";
+        String userBD = "usuarioPrueba";//userPrueba
+        String passBD = "123456";
+
+        //Objetos para manipular la conexion y los datos
+        Connection con = null;//Objeto para la conexion
+        Statement sentencia = null;//Objeto para definir y ejecutar las consultas sql
+        ResultSet resultado = null;//Objeto para obtener los resultados de las consultas sql
+        String sql = "";
+
+        //Objeto Usuario, donde se guardará la información del registro a editar
+        Usuario e = null;
+        try {
+            //CARGAR DRIVER
+            Class.forName(driver);
+            //ESTABLECER CONEXION
+            con = DriverManager.getConnection(urlDB, userBD, passBD);
+            System.out.println("Conectado ...");
+            //OBTENER EL DATO A CONSULTAR
+            String emailUsuario = request.getParameter("ID");
+
+            //Definición de Sentencia SQL
+            sql = "SELECT * FROM USUARIOS WHERE semail='" + emailUsuario + "'";
+            //Ejecutar sentencia
+            sentencia = con.createStatement();
+            resultado = sentencia.executeQuery(sql);
+
+            // VER SI HAY RESULTADODOS
+            while (resultado.next()) {
+                e = new Usuario(resultado.getString(1), resultado.getString(2),
+                        resultado.getString(4), resultado.getString(5), resultado.getString(6), resultado.getString(7),
+                        resultado.getInt(8), resultado.getInt(3));
+                break; //debe haber un solo registro.
+            }
+            // Agregar el usuario a la solicitud
+            request.setAttribute("usuario", e);
+
+            //redirigir la solicitud a la página JSP
+            request.getRequestDispatcher("/NewEditUsuario.jsp").include(request, response);
+            //cerrar la conexion
+            con.close();
+        } catch (ClassNotFoundException ex) {
+            System.out.println("No se ha podido cargar el Driver de MySQL");
+            //request.getRequestDispatcher("/Error.jsp").forward(request, response);
+            response.sendRedirect("Error.jsp");
+        } catch (SQLException ex) {
+            System.out.println("No se ha podido establecer la conexión, o el SQL esta mal formado " + sql);
+            request.getRequestDispatcher("/Error.jsp").forward(request, response);
+        }
     }
 
-    private void editar(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
+    private void modificar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //Obtener los datos a modificar.
+        String snombre = request.getParameter("txtNombre");
+        String sapellido = request.getParameter("txtApellido");
+        //el campo txtCorreo esta deshabilitado, no llega al formulario
+        String semail = request.getParameter("id");
+        String sclave = request.getParameter("txtPass");
+        String stelefono = request.getParameter("txtTel");
+        String sgenero = request.getParameter("cbgenero");
+        String perfil = request.getParameter("txtPerfil");
+        String sestado = request.getParameter("txtEstado");
 
-    private void modificar(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        RequestDispatcher vista;
+        //Datos de la conexion
+        String driver = "com.mysql.jdbc.Driver";
+        String urlDB = "jdbc:mysql://localhost/test";
+        String userBD = "usuarioPrueba";
+        String passBD = "123456";
+
+        //Objetos para manipular la conexion y los datos
+        Connection con = null;//Objeto para la conexion
+        Statement sentencia = null;//Objeto para definir y ejecutar las consultas sql
+        String sql = "";
+
+        try {
+            //CARGAR DRIVER
+            Class.forName(driver);
+        } catch (Exception e) {
+            System.out.println("No se ha podido cargar el Driver de MySql");
+            request.getRequestDispatcher("/Error.jsp").include(request, response);
+        }
+        try {
+            //ESTABLECER CONEXION
+            con = DriverManager.getConnection(urlDB, userBD, passBD);
+            System.out.println("Conectado ...");
+
+            //Definición de Sentencia SQL
+            sql = "UPDATE USUARIOS SET snombre='" + snombre + "', "
+                    + "sapellido='" + sapellido + "', "
+                    + "stelefono='" + stelefono + "', "
+                    + "sclave='" + sclave + "', "
+                    + "sgenero=b'" + sgenero + "', " //el tipo de dato es un bit (0 o 1)
+                    + "nestado=b'" + sestado + "', " //el tipo de dato es un bit (0 o 1)
+                    + "nidPerfil=" + perfil + " "
+                    + "WHERE semail='" + semail + "'";
+
+            //Ejecutar sentencia
+            sentencia = con.createStatement();
+            int filasafectadas = sentencia.executeUpdate(sql);
+            
+            System.out.println("Actualizacion exitosa ! ...");
+            request.setAttribute("mensaje", "Registro modificado exitosamente !");
+            todos(request, response);
+            //request.getRequestDispatcher("/DatosIngresados.jsp").include(request, response);
+
+        } catch (SQLException ex) {
+            request.getRequestDispatcher("/Error.jsp").include(request, response);
+            System.out.println("No se ha podido Insertar, o el SQL esta mal formado " + sql);
+        } finally {
+            try {
+                //Liberar recursos
+                sentencia.close();
+                //cerrar conexion
+                con.close();
+            } catch (SQLException ex) {
+                request.getRequestDispatcher("/Error.jsp").include(request, response);
+            }
+        }
     }
 
     private void nuevo(HttpServletRequest request, HttpServletResponse response) {
