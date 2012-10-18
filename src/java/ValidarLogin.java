@@ -44,7 +44,7 @@ public class ValidarLogin extends HttpServlet {
             //Datos de la conexion
             String driver = "com.mysql.jdbc.Driver";
             String urlDB = "jdbc:mysql://localhost/test";
-            String userBD = "usuarioPrueba";
+            String userBD = "userprueba";
             String passBD = "123456";
             String mensaje="";
 

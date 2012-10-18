@@ -113,7 +113,7 @@ public class ControladorUsuarios extends HttpServlet {
         //Datos de la conexion
         String driver = "com.mysql.jdbc.Driver";
         String urlDB = "jdbc:mysql://localhost/test";
-        String userBD = "usuarioPrueba";
+        String userBD = "userprueba";
         String passBD = "123456";
 
         //Objetos para manipular la conexion y los datos
@@ -172,7 +172,7 @@ public class ControladorUsuarios extends HttpServlet {
         //Datos de la conexion
         String driver = "com.mysql.jdbc.Driver";
         String urlDB = "jdbc:mysql://localhost/test";
-        String userBD = "usuarioPrueba";
+        String userBD = "userprueba";
         String passBD = "123456";
 
         //Objetos para manipular la conexion y los datos
@@ -226,7 +226,7 @@ public class ControladorUsuarios extends HttpServlet {
         //Datos de la conexion
         String driver = "com.mysql.jdbc.Driver";
         String urlDB = "jdbc:mysql://localhost/test";
-        String userBD = "usuarioPrueba";//userPrueba
+        String userBD = "userprueba";//userprueba
         String passBD = "123456";
 
         //Objetos para manipular la conexion y los datos
@@ -277,7 +277,7 @@ public class ControladorUsuarios extends HttpServlet {
         //Datos de la conexion
         String driver = "com.mysql.jdbc.Driver";
         String urlDB = "jdbc:mysql://localhost/test";
-        String userBD = "usuarioPrueba";//userPrueba
+        String userBD = "userprueba";//userprueba
         String passBD = "123456";
 
         //Objetos para manipular la conexion y los datos
@@ -343,7 +343,7 @@ public class ControladorUsuarios extends HttpServlet {
         //Datos de la conexion
         String driver = "com.mysql.jdbc.Driver";
         String urlDB = "jdbc:mysql://localhost/test";
-        String userBD = "usuarioPrueba";
+        String userBD = "userprueba";
         String passBD = "123456";
 
         //Objetos para manipular la conexion y los datos
