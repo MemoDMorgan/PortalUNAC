@@ -107,19 +107,13 @@
                         <%= u.getTelefono()%>
                     </td>
                     <td>
-                        <%= u.getGenero()%>
+                        <%= u.getDescripcionGenero()%>
                     </td>
                     <td>
-                        <%= u.getIdPerfil()%>
+                        <%= u.getDescripcionPerfil()%>
                     </td>
                     <td>
-                        <%
-                            if (u.getEstado() == 0) 
-                                estado = "Activo";
-                             else
-                                estado = "Inactivo";
-                        %>
-                        <%=estado%>
+                       <%= u.getDescripcionEstado()%>
                     </td>
                     <td>
                         <a href="ControladorUsuarios?accion=eliminar&ID=<%=u.getEmail()%>">Eliminar</a>
@@ -133,16 +127,14 @@
                     }
                 }
             %>
-
         </table>
-        <br>
+        <br>       
+        <p style="text-align:center">
+            <a href="ControladorUsuarios?accion=nuevo">Nuevo Usuario</a>  
+        </p>
         <p style="text-align:center;color: red">
             <%=mensaje%>
-        </p>
-
-        <hr>
-    <center>
-        <!--<b><a href="/ProyectoEjemploPortalUNACV6/Home.jsp">Volver a la Página Inicial</a></b>!-->
-    </center>
-</body>
+        </p>        
+        <hr>   
+    </body>
 </html>

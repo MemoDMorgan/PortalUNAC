@@ -4,6 +4,7 @@
     Author     : Guillermo
 --%>
 
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="Entidades.*"%>
 <%
@@ -16,22 +17,24 @@
     String sclave = "";
     String stelefono = "";
     String sgenero = "";
-    String perfil = "";
+    int idperfil = -1;
     String sestado = "";
 
     String accion = "insertar";//por defecto es un nuevo registro
+    String titulo="Nuevo Usuario";
     if (e != null) //si el usuario no es nulo significa que es modificación
     {
         snombre = e.getNombre();
-        sapellido =e.getApellido();
+        sapellido = e.getApellido();
         semail = e.getEmail();
         sclave = e.getClave();
         stelefono = e.getTelefono();
         sgenero = e.getGenero();
-        perfil = Integer.toString(e.getIdPerfil());
-        accion = "modificar";        
-        sestado=Integer.toString(e.getEstado());
-    }
+        idperfil = e.getIdPerfil();
+        accion = "modificar";
+        sestado = Integer.toString(e.getEstado());
+        titulo="Modificar Usuario";
+    }   
 %>
 <!DOCTYPE html>
 <html>
@@ -77,7 +80,7 @@
         <br>
         <hr>        
         <div id="Main-formulario2">            
-            <h2>Información del Usuario</h2>
+            <h2><%=titulo%></h2>
             <form method="post" name="frm" id="frmRegistro" action="ControladorUsuarios">
                 <div class="campo">
                     <label class="etiquetaNew">Nombre:</label>
@@ -88,8 +91,8 @@
                     <input type="text" class="texto" id="txtApellido" name="txtApellido" value="<%=sapellido%>"/>
                 </div>
                 <div class="campo2">
-                    <label class="etiquetaNew">Correo Electrónico:</label>
-                    <input type="text" class="texto" id="txtCorreo" name="txtCorreo" value="<%=semail%>" disabled=""/>
+                    <label class="etiquetaNew">Correo Electrónico:</label>                    
+                    <input type="text" class="texto" id="txtCorreo" name="txtCorreo" value="<%=semail%>" <%=e != (null) ? " disabled" : ""%>/>
                 </div>
                 <div class="campo">
                     <label class="etiquetaNew">Contraseña:</label>
@@ -103,27 +106,68 @@
                     <label class="etiquetaNew">Género:</label>                    
                     <select name="cbgenero" class="texto" id="cbgenero">
                         <option value="2">Seleccione el Género</option>
-                        <%if (sgenero.equals("0")) {%>
+                        <%
+                            if (accion.equals("modificar")) {
+                                if (sgenero.equals("0")) {%>
                         <option value="0" selected>Femenino</option>
                         <option value="1">Masculino</option>
                         <%} else {
                         %>
                         <option value="0" >Femenino</option>
                         <option value="1" selected>Masculino</option>
-                        <%}%>
+                        <%}
+                        } else { //es un nuevo registro
+%>
+                        <option value="2">Seleccione el Género</option>
+                        <option value="0">Femenino</option>
+                        <option value="1">Masculino</option>
+                        <%}//fin accion
+%>
                     </select>
                 </div>
                 <div class="campo">
-                    <label class="etiquetaNew">Perfil:</label>
-                    <input type="text" class="texto" id="txtPerfil" name="txtPerfil" value="<%=perfil%>"/>
+                    <label class="etiquetaNew">Perfil:</label>                    
+                    <select name="listaPerfil">
+                        <option value="0" selected>
+                            Seleccionar el Perfil
+                        </option>
+                        <%List ListaPerfiles = (List) request.getAttribute("Perfiles");//se recibe el arreglo
+                            System.out.print("Cargando Perfiles...");
+                            Perfil oPerfil = null;//se define un objeto 
+                            for (int i = 0; i < ListaPerfiles.size(); i++) {
+                                        oPerfil = (Perfil) ListaPerfiles.get(i);%>
+                        <option value="<%=oPerfil.getId()%>" <%=idperfil == (oPerfil.getId()) ? " selected" : ""%>>
+                            <%=oPerfil.getNombre()%>
+                        </option>
+                        <%}%>
+                    </select>
                 </div>                        
                 <div class="campo">
-                    <label class="etiquetaNew">Estado:</label>
-                    <input type="text" class="texto" id="txtEstado" name="txtEstado" value="<%=sestado%>"/>
+                    <label class="etiquetaNew">Estado:</label>                    
+                    <select name="cbestado" class="texto" id="cbestado">
+                        <option value="2">Seleccione el Estado</option>
+                        <%
+                            if (accion.equals("modificar")) {
+                                if (sestado.equals("0")) {%>
+                        <option value="0" selected>Inactivo</option>
+                        <option value="1">Activo</option>
+                        <%} else {
+                        %>
+                        <option value="0" >Inactivo</option>
+                        <option value="1" selected>Activo</option>
+                        <%}
+                        } else { //es un nuevo registro
+%>
+                        <option value="2">Seleccione el Estado</option>
+                        <option value="0">Inactivo</option>
+                        <option value="1">Activo</option>
+                        <%}//fin accion
+%>
+                    </select>
                 </div>                        
                 <div style="left: 40%;position: relative">
                     <br>
-                    <input type="submit" value="Modificar" name="btnModificar" id="btnModificar" class="boton"/>
+                    <input type="submit" value="Guardar" name="btnModificar" id="btnModificar" class="boton"/>
                     <br>
                     <br>                                            
                 </div>
