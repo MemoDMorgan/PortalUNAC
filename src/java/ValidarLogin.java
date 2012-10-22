@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -46,7 +47,7 @@ public class ValidarLogin extends HttpServlet {
             String urlDB = "jdbc:mysql://localhost/test";
             String userBD = "userprueba";
             String passBD = "123456";
-            String mensaje="";
+            String mensaje = "";
 
             //Objetos para manipular la conexion y los datos
             Connection con = null;//Objeto para la conexion
@@ -63,7 +64,10 @@ public class ValidarLogin extends HttpServlet {
                 System.out.println("Conectado ...");
 
                 //Definición de Sentencia SQL
-                sql = "SELECT snombre,nidPerfil FROM USUARIOS WHERE semail= '" + correo + "' AND "
+                sql = "SELECT usuarios.snombre,usuarios.nidPerfil,semail,perfiles.snombre "
+                        + "FROM usuarios,perfiles "
+                        + "WHERE usuarios.nidPerfil=perfiles.idPerfil "
+                        + "AND semail= '" + correo + "' AND "
                         + "sclave = '" + pass + "'";
 
                 //Ejecutar sentencia
@@ -71,32 +75,38 @@ public class ValidarLogin extends HttpServlet {
                 resultado = sentencia.executeQuery(sql);
 
                 //si el resultado tiene un dato el usuario con el login y pass existe, autenticación valida.
-                if (resultado.next())                     
-                {
+                if (resultado.next()) {
                     System.out.println("autenticado ...");
-                    //enviamos el nombre y el perfil del usuario a la pagina home
-                    request.setAttribute("usuario", resultado.getString("snombre"));                    
-                    request.setAttribute("perfil", resultado.getString("nidPerfil"));                    
+                    //creamos la sesion
+                    HttpSession sesionOk = request.getSession();//creamos la sesion
+                    //agregamos el usuario a la sesión
+                    sesionOk.setAttribute("usuario", resultado.getString(1));
+                    //agregamos el perfil a la sesión                                        
+                    sesionOk.setAttribute("perfil", resultado.getString(2));
+                    //agregamos el id del usuario                                        
+                    sesionOk.setAttribute("email", resultado.getString("semail"));
+                    //agregamos la descripcion del perfil
+                    sesionOk.setAttribute("sperfil", resultado.getString(4));
                     vista = request.getRequestDispatcher("Home.jsp");
                     //request.getRequestDispatcher("/Index.jsp").include(request, response);
 
                 } else {
                     System.out.println("Error usuario no existe ...");
-                    vista = request.getRequestDispatcher("index.jsp");                    
+                    vista = request.getRequestDispatcher("index.jsp");
                 }
 
                 vista.forward(request, response);
             } catch (ClassNotFoundException ex) {
-                 mensaje="No se ha podido cargar el Driver de MySQL";
+                mensaje = "No se ha podido cargar el Driver de MySQL";
                 System.out.println(mensaje);
                 //request.getRequestDispatcher("/Error.jsp").include(request, response);
                 //request.getRequestDispatcher("/Error.jsp").forward(request, response);
                 response.sendRedirect("Error.jsp");
             } catch (SQLException ex) {
-                mensaje="No se ha podido establecer la conexión, o el SQL esta mal formado " + sql;
-                mensaje=mensaje+"\n"+ex.toString();
+                mensaje = "No se ha podido establecer la conexión, o el SQL esta mal formado " + sql;
+                mensaje = mensaje + "\n" + ex.toString();
                 System.out.println(mensaje);
-                request.setAttribute("mensaje", mensaje);                    
+                request.setAttribute("mensaje", mensaje);
                 request.getRequestDispatcher("/Error.jsp").forward(request, response);
             } finally {
                 try {

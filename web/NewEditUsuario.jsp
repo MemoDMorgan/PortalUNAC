@@ -5,9 +5,23 @@
 --%>
 
 <%@page import="java.util.List"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" session="true"%>
 <%@page import="Entidades.*"%>
 <%
+    //obtener datos de la sesión sino existen rediridir a index para login
+    String nombre = "";
+    String perfil = "";
+    String sperfil="";
+    HttpSession sesionOk = request.getSession();
+    if (sesionOk.getAttribute("usuario") == null) {
+        request.setAttribute("error", "Es obligatorio identificarse");
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
+    } else {
+        nombre = (String) sesionOk.getAttribute("usuario");
+        perfil = (String) sesionOk.getAttribute("perfil");
+        sperfil=(String) sesionOk.getAttribute("sperfil");
+    }
+
 //Parámetros de entrada
     Usuario e = (Usuario) request.getAttribute("usuario");
 
@@ -21,7 +35,7 @@
     String sestado = "";
 
     String accion = "insertar";//por defecto es un nuevo registro
-    String titulo="Nuevo Usuario";
+    String titulo = "Nuevo Usuario";
     if (e != null) //si el usuario no es nulo significa que es modificación
     {
         snombre = e.getNombre();
@@ -33,8 +47,8 @@
         idperfil = e.getIdPerfil();
         accion = "modificar";
         sestado = Integer.toString(e.getEstado());
-        titulo="Modificar Usuario";
-    }   
+        titulo = "Modificar Usuario";
+    }
 %>
 <!DOCTYPE html>
 <html>
@@ -47,6 +61,7 @@
         <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.23.custom.css"/>         
         <script src = "js/jquery-1.8.0.min.js"></script>
         <script src = "js/jquery-ui-1.8.23.custom.min.js"></script>
+        <script src = "js/myscripts.js"></script>
         <script src="js/jMenu.jquery.js"></script>         
         <script type="text/javascript"> 
             $(document).ready(function(){ 
@@ -70,7 +85,9 @@
     </head>
     <body>
         <div id='header'>
-            <div id='login'>                
+            <div id='mensajeIN'>                
+                <b>Bienvenido <%=sperfil%>:<%=nombre%>&nbsp;&nbsp;</b>
+                <a href="ControladorUsuarios?accion=salir"><img src="imagenes/salir.gif" width="48" height="48" alt="salir"/></a>
             </div>
             <div id='banner'>
                 <img src='imagenes/logo_unac.jpg' width='282' height='91' alt='logo_unac'/>
@@ -81,22 +98,22 @@
         <hr>        
         <div id="Main-formulario2">            
             <h2><%=titulo%></h2>
-            <form method="post" name="frm" id="frmRegistro" action="ControladorUsuarios">
+            <form method="post" name="frm" id="frmIngreso" action="ControladorUsuarios">
                 <div class="campo">
                     <label class="etiquetaNew">Nombre:</label>
-                    <input type="text" class="texto" id="txtNombre" name="txtNombre" value="<%=snombre%>"/>
+                    <input type="text" class="texto" id="txtNombre" name="txtNombre" value="<%=snombre%>" required autofocus/>
                 </div>
                 <div class="campo">
                     <label class="etiquetaNew">Apellido:</label>
-                    <input type="text" class="texto" id="txtApellido" name="txtApellido" value="<%=sapellido%>"/>
+                    <input type="text" class="texto" id="txtApellido" name="txtApellido" value="<%=sapellido%>" required/>
                 </div>
                 <div class="campo2">
                     <label class="etiquetaNew">Correo Electrónico:</label>                    
-                    <input type="text" class="texto" id="txtCorreo" name="txtCorreo" value="<%=semail%>" <%=e != (null) ? " disabled" : ""%>/>
+                    <input type="text" class="texto" id="txtCorreo" name="txtCorreo" value="<%=semail%>" <%=e != (null) ? " disabled" : ""%> required/>
                 </div>
                 <div class="campo">
                     <label class="etiquetaNew">Contraseña:</label>
-                    <input type="text" class="texto" id="txtPass" name="txtPass" value="<%=sclave%>"/>
+                    <input type="text" class="texto" id="txtPass" name="txtPass" value="<%=sclave%>" required/>
                 </div>                
                 <div class="campo">
                     <label class="etiquetaNew">Teléfono:</label>
@@ -117,12 +134,12 @@
                         <option value="1" selected>Masculino</option>
                         <%}
                         } else { //es un nuevo registro
-%>
+                        %>
                         <option value="2">Seleccione el Género</option>
                         <option value="0">Femenino</option>
                         <option value="1">Masculino</option>
                         <%}//fin accion
-%>
+                        %>
                     </select>
                 </div>
                 <div class="campo">
@@ -135,7 +152,7 @@
                             System.out.print("Cargando Perfiles...");
                             Perfil oPerfil = null;//se define un objeto 
                             for (int i = 0; i < ListaPerfiles.size(); i++) {
-                                        oPerfil = (Perfil) ListaPerfiles.get(i);%>
+                                oPerfil = (Perfil) ListaPerfiles.get(i);%>
                         <option value="<%=oPerfil.getId()%>" <%=idperfil == (oPerfil.getId()) ? " selected" : ""%>>
                             <%=oPerfil.getNombre()%>
                         </option>
@@ -157,21 +174,22 @@
                         <option value="1" selected>Activo</option>
                         <%}
                         } else { //es un nuevo registro
-%>
+                        %>
                         <option value="2">Seleccione el Estado</option>
                         <option value="0">Inactivo</option>
                         <option value="1">Activo</option>
                         <%}//fin accion
-%>
+                        %>
                     </select>
                 </div>                        
-                <div style="left: 40%;position: relative">
+                <div style="left: 30%;position: relative">
                     <br>
                     <input type="submit" value="Guardar" name="btnModificar" id="btnModificar" class="boton"/>
+                    <input type="submit" value="Cancelar" name="btnCancelar" id="btnCancelar" class="boton"/>
                     <br>
                     <br>                                            
                 </div>
-                <input type="hidden" name="accion" value="<%=accion%>" />
+                <input type="hidden" id="accion" name="accion" value="<%=accion%>" />
                 <input type="hidden" name="id" value="<%=semail%>" />
             </form>
         </div>

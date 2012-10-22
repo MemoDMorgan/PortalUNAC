@@ -21,10 +21,11 @@ $(document).ready(function(){
         }
     }); 
     
-    //validaciones
+    //validaciones del formulario de registro
     $("#frmRegistro").submit(function(){           
         var mensajeerror="";
         retorno=false;
+        
         var texto=$("#txtNombre").attr("value");
         if (texto =="")
         {
@@ -104,7 +105,7 @@ $(document).ready(function(){
             $( "#dialog" ).dialog( "option", "title", "Registro Satisfactorio !");
             $( "#dialog" ).dialog( "open" );*/
             retorno=true
-            //$("#frmRegistro").submit();
+        //$("#frmRegistro").submit();
             
         }
         //alert(mensajeerror)
@@ -164,6 +165,40 @@ $(document).ready(function(){
         }                
     });
     
+    //cancelar la acción, redirigir al listar en Admin
+    $("#btnCancelar").click(function(){        
+        //asignar el valor de la accion a listar
+        //alert("llego");
+        //$("#accion").attr("value","listar");
+        location.href = 'ControladorUsuarios?accion=listar';//redirigir a listar.jsp        
+        return false;//no hacer submit        
+    });        
+    
+    //cancelar la acción, redirigir al listar en Admin
+    $("#btnCancelarHome").click(function(){        
+        //asignar el valor de la accion a listar
+        //alert("llego"); 
+        location.href = 'Home.jsp';//redirigir a home.jsp        
+        return false;//no hacer submit
+    });        
+    
+    //Opcion del menu escribirMensaje
+    $("#Enviarmensaje").click(function(){
+        //alert("Enviando mensaje ...")        
+        });
+    
+    //Llamado ajax de los mensajes del profesor
+    /* $('.verMensajes').click(function() {  
+        //alert("llego");
+        //var username=$('#idProfesor').val();
+        $.get('ControladorUsuarios',{
+            accion:'contarMensajes'
+        },function(responseText) { 
+            alert(responseText);
+            $('#nmensajes').text(responseText);         
+        });
+    });*/
+    
     //animacion
     options = {
         percent: 100
@@ -194,3 +229,19 @@ $(function() {
         hide: "explode"
     });    
 });
+
+//Llamado asincrona para consultar el # de mensajes del profesor cada 5 segundos
+setInterval(function() {
+    //call $.ajax here
+    //alert("llego");
+    //var username=$('#idProfesor').val();
+    $.get('ControladorUsuarios', //llama al servlet
+    {
+        accion:'contarMensajes'//le manda el parametro accion 
+    },
+    function(responseText) { //funcion callback 
+        //alert(responseText);
+        //inserta la respuesta enviada por el servlet, en un link         
+        $('#nmensajes').text(responseText);        
+    });
+}, 5000); //5 seconds

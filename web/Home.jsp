@@ -3,11 +3,25 @@
     Created on : 07-sep-2012, 2:09:12
     Author     : Guillermo
 --%>
+<%@page contentType="text/html" pageEncoding="UTF-8" session="true"%> 
 <%
-    String nombre = (String)request.getAttribute("usuario");    
-    String perfil = (String)request.getAttribute("perfil");
+    //String nombre = (String) request.getAttribute("usuario");
+    //String perfil = (String) request.getAttribute("perfil");
+    String nombre = "";
+    String perfil = "";
+    String mensaje = "";
+    String sperfil="";
+    HttpSession sesionOk = request.getSession();
+    if (sesionOk.getAttribute("usuario") == null) {
+        request.setAttribute("error", "Es obligatorio identificarse");
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
+    } else {
+        nombre = (String) sesionOk.getAttribute("usuario");
+        perfil = (String) sesionOk.getAttribute("perfil");
+        sperfil=(String) sesionOk.getAttribute("sperfil");
+        mensaje = request.getAttribute("mensaje") == null ? "" : (String) request.getAttribute("mensaje");
+    }
 %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,6 +32,7 @@
         <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.23.custom.css"/> 
         <script src = "js/jquery-1.8.0.min.js"></script>
         <script src = "js/jquery-ui-1.8.23.custom.min.js"></script>
+        <script src = "js/myscripts.js"></script>
         <script src="js/jMenu.jquery.js"></script>         
         <script type="text/javascript"> 
             $(document).ready(function(){ 
@@ -41,7 +56,11 @@
     </head>
     <body>
         <div id='header'>
-            <div id='login'>                
+            <div id='mensajeIN'>                
+                <b>Bienvenido <%=sperfil%>:<%=nombre%>&nbsp;&nbsp;</b>
+                <a href="ControladorUsuarios?accion=salir">
+                    <img src="imagenes/salir.gif" width="48" height="48" alt="salir"/>
+                </a>                
             </div>
             <div id='banner'>
                 <img src='imagenes/logo_unac.jpg' width='282' height='91' alt='logo_unac'/>
@@ -54,11 +73,17 @@
         <%} else if (perfil.equals("2")) {
         %>
         <jsp:include page="menuEstudiante.jsp"/>
-        <%            }
+        <%} else if (perfil.equals("3")) {
         %>
+        <jsp:include page="menuProfe.jsp"/>
+        <p class="verMensajes">Mensajes sin leer:
+            <a href="ControladorUsuarios?accion=verMensajesNoRead" id="nmensajes" ></a></p>
+            <%}
+            %>
         <div id='content' style='text-align:center'>
             <h1>Bienvenido al PORTAL UNAC </h1>
             <p class='mensajeT2'>Hola <%=nombre%>, has ingresado exitosamente !</p><br>            
+            <%=mensaje%>
         </div>
     </body>
 </html>

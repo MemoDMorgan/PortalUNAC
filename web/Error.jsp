@@ -24,7 +24,7 @@
         <div id='content' style='text-align:center'>
             <h1>Validación del Login </h1>
             <p class='mensajeT1'><%=mensaje%></p><br>
-            <a href='/ProyectoEjemploPortalUNACV6'>Home</a>
+            <a href='Home.jsp'>Home</a>
         </div>
     </body>
 </html>

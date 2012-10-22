@@ -3,15 +3,15 @@
         <!-- Do not forget the "fNiv" class for the first level links !! --> 
         <ul> 
             <li class="arrow"></li> 
-            <li><a>Consultar Notas</a></li> 
-            <li><a>Ver Materias</a></li>             
+            <li><a>Registrar Notas</a></li> 
+            <li><a>Consultar Materias</a></li>             
         </ul>	
     </li>
     <li><a class="fNiv">Contacto|</a>
         <!-- Do not forget the "fNiv" class for the first level links !! --> 
         <ul> 
             <li class="arrow"></li> 
-            <li><a id="Enviarmensaje" href="ControladorUsuarios?accion=listarProfesores">Escribir a Profesor</a></li>                     
+            <li><a id="Enviarmensaje" href="ControladorUsuarios?accion=listarMensajes">Ver Mensajes</a></li>                     
         </ul>	
     </li>
 </ul>	

@@ -4,16 +4,17 @@
     Author     : Guillermo
 --%>
 
+
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page contentType="text/html" pageEncoding="UTF-8" session="true"%>
 <%@ page language="java" import="java.util.*,Entidades.Usuario" %>
-
+<%@page import="Entidades.Mensaje"%>
 
 <%
 
 //obtener datos de la sesión sino existen rediridir a index para login
     String nombre = "";
     String perfil = "";
-    String sperfil="";
     HttpSession sesionOk = request.getSession();
     if (sesionOk.getAttribute("usuario") == null) {
         request.setAttribute("error", "Es obligatorio identificarse");
@@ -21,10 +22,9 @@
     } else {
         nombre = (String) sesionOk.getAttribute("usuario");
         perfil = (String) sesionOk.getAttribute("perfil");
-        sperfil=(String) sesionOk.getAttribute("sperfil");        
     }
-    //Obtener el arreglo de estudiantes enviado en la solicitud
-    ArrayList<Usuario> usuarios = (ArrayList<Usuario>) request.getAttribute("usuarios");
+    //Obtener el arreglo de mensajes enviado en la solicitud
+    ArrayList<Mensaje> mensajes = (ArrayList<Mensaje>) request.getAttribute("Mensajes");
     int contador = 0;
 
     //mensaje de datos eliminados
@@ -34,18 +34,22 @@
      */
     String mensaje = request.getAttribute("mensaje") == null ? "" : (String) request.getAttribute("mensaje");
     String estado = "";
+
+
+
 %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Listar Mensajes</title>
         <link rel="stylesheet" href="css/styles.css" type="text/css" >        
         <link rel="stylesheet" href="css/bluedream.css" type="text/css" >        
         <link rel="stylesheet" type="text/css" href="css/jMenu.jquery.css" media="screen" /> 
         <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.23.custom.css"/> 
         <script src = "js/jquery-1.8.0.min.js"></script>
         <script src = "js/jquery-ui-1.8.23.custom.min.js"></script>
+        <script src = "js/myscripts.js"></script>
         <script src="js/jMenu.jquery.js"></script>         
         <script type="text/javascript"> 
             $(document).ready(function(){ 
@@ -70,34 +74,38 @@
     <body>
         <div id='header'>
             <div id='mensajeIN'>                
-                <b>Bienvenido <%=sperfil%>:<%=nombre%>&nbsp;&nbsp;</b>
+                <b>Bienvenido <%=nombre%>&nbsp;&nbsp;</b>
                 <a href="ControladorUsuarios?accion=salir"><img src="imagenes/salir.gif" width="48" height="48" alt="salir"/></a>
             </div>
             <div id='banner'>
                 <img src='imagenes/logo_unac.jpg' width='282' height='91' alt='logo_unac'/>
             </div>
         </div>
-        <jsp:include page="menuAdmin.jsp"/>        
+        <jsp:include page="menuProfe.jsp"/>
+        <p class="verMensajes">Mensajes sin leer:
+            <a href="ControladorUsuarios?accion=verMensajesNoRead" id="nmensajes" ></a></p>
         <br>
         <hr>
         <table align="center">            
-            <caption>Usuarios Registrados</caption>
+            <caption>Mensajes Enviados</caption>
             <thead>
                 <tr>
-                    <th scope="col">email</th>
-                    <th scope="col">Clave</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Apellido</th>
-                    <th scope="col">Teléfono</th>
-                    <th scope="col">Género</th>
-                    <th scope="col">Perfil</th>
+                    <th scope="col">De</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Mensaje</th>                    
+                    <th scope="col">Fecha</th>
                     <th scope="col">Estado</th>
                 </tr>
             </thead>
             <%
-                if (usuarios != null && usuarios.size() > 0) {
-                    for (Iterator iterator = usuarios.iterator(); iterator.hasNext();) {
-                        Usuario u = (Usuario) iterator.next();
+                if (mensajes != null && mensajes.size() > 0) {
+                    Calendar fecha;
+                    String sfecha;
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                    for (Iterator iterator = mensajes.iterator(); iterator.hasNext();) {
+                        Mensaje u = (Mensaje) iterator.next();
+                        fecha = u.getFechaMensaje();
+                        sfecha = sdf.format(fecha.getTime());
                         contador++;
             %>
             <tbody>
@@ -109,49 +117,27 @@
                 <tr class="odd">                               
                     <%}%>
                     <td>
-                        <%= u.getEmail()%>
+                        <%= u.getNombreDe()%>
                     </td>
                     <td>
-                        <%= u.getClave()%>
+                        <%= u.getMailDe()%>
                     </td>
                     <td>
-                        <%= u.getNombre()%>
-                    </td>
+                        <%= u.getMensaje()%>
+                    </td>                    
                     <td>
-                        <%= u.getApellido()%>
-                    </td>
-                    <td>
-                        <%= u.getTelefono()%>
-                    </td>
-                    <td>
-                        <%= u.getDescripcionGenero()%>
-                    </td>
-                    <td>
-                        <%= u.getDescripcionPerfil()%>
-                    </td>
+                        <%= sfecha%>
+                    </td>                    
                     <td>
                         <%= u.getDescripcionEstado()%>
-                    </td>
-                    <td>
-                        <a href="ControladorUsuarios?accion=eliminar&ID=<%=u.getEmail()%>">Eliminar</a>
-                    </td>
-                    <td>
-                        <a href="ControladorUsuarios?accion=editar&ID=<%=u.getEmail()%>">Editar</a>
-                    </td>
+                    </td>   
                 </tr>
             </tbody>
             <%
                     }
                 }
             %>
-        </table>
-        <br>       
-        <p style="text-align:center">
-            <a href="ControladorUsuarios?accion=nuevo">Nuevo Usuario</a>  
-        </p>
-        <p style="text-align:center;color: red">
-            <%=mensaje%>
-        </p>        
+        </table>        
         <hr>   
     </body>
 </html>
